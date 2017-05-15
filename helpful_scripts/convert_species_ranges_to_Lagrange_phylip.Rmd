@@ -1,0 +1,49 @@
+---
+title: "Get Geographic Data into Lagrange Format"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(BioGeoBEARS)
+library(tidyverse)
+```
+
+This code will allow you to input a list of species and their ranges and transform it into the correct geographic data format for analysis in BioGeoBEARS.
+
+# Input dataframe of species and their ranges
+Species ranges data should be in a data frame, where the rownames are species and the columns are each geographic regions in the analysis. Entries in the data frame should be 1s and 0s corresponding to the presence/ absence of each species in each region. It make take some data wrangling to get your distribution data in this format.
+
+```{r}
+
+species_ranges <- read.csv("species_ranges.csv", row.names = 1)
+
+```
+
+# Convert the dataframe to tip ranges object
+You'll need to transform your tip data into a specific file format that is readible by BioGeoBEARS.
+
+```{r}
+
+tip_ranges_object=define_tipranges_object(tmpdf = species_ranges) 
+
+```
+
+# Save the file to disk
+Save the new ranges object as a Lagrange phylip file - this is a carry over from when most analyses were performed in Lagrange. 
+```{r}
+
+save_tipranges_to_LagrangePHYLIP(tip_ranges_object, 
+                                 lgdata_fn = "lagrange_area_data_file.data",
+                                 areanames = colnames(tip_ranges_object@df))
+
+```
+
+# Provide the path to this file in your BioGeoBEARS analysis 
+As in the tutorial, you'll need to provide the path to your ranges file in the BioGeoBEARS analyses. Be sure to change the path depending on your working directory. You may need to input the full path to the files. 
+
+```{r}
+tip_loc = np(path="lagrange_area_data_file.data")   
+tipranges = getranges_from_LagrangePHYLIP(lgdata_fn=tip_loc)
+```
+
