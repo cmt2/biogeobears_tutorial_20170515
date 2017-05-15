@@ -55,8 +55,6 @@ tipranges = getranges_from_LagrangePHYLIP(lgdata_fn=geo_file_name)
 
 tipranges # ver los datos geográficos 
 
-####################
-
 # Construir el modelo DEC (modelo 'default' del paquete)
 
 BioGeoBEARS_run_object = define_BioGeoBEARS_run() # empezar un modelo
